@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -115,26 +116,48 @@ public class BookServiceImplUnitTestNoDB
     @Test
     public void findAll()
     {
+        Mockito.when(bookrepos.findAll())
+                .thenReturn(myBookList);
+
+        assertEquals(5, bookService.findAll().size());
     }
 
     @Test
     public void findBookById()
     {
+        Mockito.when(bookrepos.findById(4L))
+                .thenReturn(Optional.of(myBookList.get(3)));
+
+        assertEquals("Essentials of Finance", bookService.findBookById(4L).getTitle());
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void notFindBookById()
     {
+        Mockito.when(bookrepos.findById(100L))
+                .thenReturn(Optional.empty());
+
+        assertEquals(100L , bookService.findBookById(100L).getBookid());
     }
 
     @Test
     public void delete()
     {
+        Mockito.when(bookrepos.findById(3L))
+                .thenReturn(Optional.of(myBookList.get(0)));
+
+        Mockito.doNothing()
+                .when(bookrepos)
+                .deleteById(3L);
+
+        bookService.delete(3L);
+        assertEquals(5, myBookList.size());
     }
 
     @Test
     public void save()
     {
+
     }
 
     @Test
