@@ -1,6 +1,7 @@
 package com.lambdaschool.bookstore.services;
 
 import com.lambdaschool.bookstore.exceptions.ResourceNotFoundException;
+import com.lambdaschool.bookstore.handlers.RestExceptionHandler;
 import com.lambdaschool.bookstore.models.Author;
 import com.lambdaschool.bookstore.models.Book;
 import com.lambdaschool.bookstore.models.User;
@@ -22,6 +23,8 @@ import java.util.List;
 public class BookServiceImpl
         implements BookService
 {
+
+
     @Autowired
     UserAuditing userAuditing;
 
@@ -46,6 +49,9 @@ public class BookServiceImpl
 //    PUT /books/book/{id}
 //    DELETE /books/book/{id}
 
+//    When a client tries searching for or updating a book that does not exist, a generic exception is sent back to the client.
+//    Change this so our custom exception ResourceNotFoundException is returned instead.
+
     // Goes in controller
     @Override
     public List<Book> findAll()
@@ -63,7 +69,7 @@ public class BookServiceImpl
     public Book findBookById(long id)
     {
             return bookrepos.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("Book with id " + id + " Not Found!"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " Not Found!"));
         }
 
 
@@ -156,7 +162,7 @@ public class BookServiceImpl
             {
                 Author addAuthor = authorrepos.findById(w.getAuthor()
                                                                 .getAuthorid())
-                        .orElseThrow(() -> new EntityNotFoundException("Author Id " + w.getAuthor()
+                        .orElseThrow(() -> new ResourceNotFoundException("Author Id " + w.getAuthor()
                                 .getAuthorid() + " Not Found!"));
                 currentBook.getWrotes()
                         .add(new Wrote(addAuthor, currentBook));

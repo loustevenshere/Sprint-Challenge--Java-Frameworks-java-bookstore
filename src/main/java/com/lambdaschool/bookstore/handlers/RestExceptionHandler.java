@@ -81,6 +81,9 @@ public class RestExceptionHandler
                                     HttpStatus.NOT_FOUND);
     }
 
+//    When a client tries searching for or updating a book that does not exist, a generic exception is sent back to the client. Change this so our custom
+//    exception ResourceNotFoundException is returned instead.
+
     /**
      * Our custom handling of ResourceFoundExceptions. This gets thrown manually by our application.
      *
