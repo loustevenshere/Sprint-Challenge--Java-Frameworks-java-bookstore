@@ -53,16 +53,23 @@ public class ResourceServerConfig
                              "/createnewuser")
                 .permitAll()
                 .antMatchers("/users/**",
-                             "/useremails/**",
+                             "/useremails/**", "/books/**",
                              "/oauth/revoke-token",
                              "/logout")
                 .authenticated()
-                .antMatchers("/roles/**")
+                .antMatchers("/roles/**", "/books/**")
                 .hasAnyRole("ADMIN", "DATA")
                 .anyRequest().denyAll()
                 .and()
                 .exceptionHandling()
                 .accessDeniedHandler(new OAuth2AccessDeniedHandler());
+
+
+//        GET /books/books - any user with the role ADMIN, USER, or DATA can access
+//        GET /books/book/{id} - any user with role ADMIN, USER, or DATA can access
+//        POST /books/book - any user with role ADMIN can access
+//        PUT /books/book/{id} - any user with role ADMIN can access
+//        DELETE /books/book/{id} - any user with role ADMIN can access
 
         // http.requiresChannel().anyRequest().requiresSecure(); required for https
 

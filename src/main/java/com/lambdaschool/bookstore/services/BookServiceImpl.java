@@ -1,10 +1,13 @@
 package com.lambdaschool.bookstore.services;
 
+import com.lambdaschool.bookstore.exceptions.ResourceNotFoundException;
 import com.lambdaschool.bookstore.models.Author;
 import com.lambdaschool.bookstore.models.Book;
+import com.lambdaschool.bookstore.models.User;
 import com.lambdaschool.bookstore.models.Wrote;
 import com.lambdaschool.bookstore.repository.AuthorRepository;
 import com.lambdaschool.bookstore.repository.BookRepository;
+import com.lambdaschool.bookstore.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,23 +34,41 @@ public class BookServiceImpl
     @Autowired
     AuthorRepository authorrepos;
 
+    @Autowired
+    UserRepository userrepos;
+
+    @Autowired
+    private HelperFunctions helperFunctions;
+
+//    GET /books/books
+//    GET /books/book/{id}
+//    POST /books/book
+//    PUT /books/book/{id}
+//    DELETE /books/book/{id}
+
+    // Goes in controller
     @Override
     public List<Book> findAll()
     {
-        List<Book> list = new ArrayList<>();
-        bookrepos.findAll()
-                .iterator()
-                .forEachRemaining(list::add);
-        return list;
-    }
+            List<Book> list = new ArrayList<>();
+            bookrepos.findAll()
+                    .iterator()
+                    .forEachRemaining(list::add);
+            return list;
+        }
 
+
+    // Goes in controller
     @Override
     public Book findBookById(long id)
     {
-        return bookrepos.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Book with id " + id + " Not Found!"));
-    }
+            return bookrepos.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Book with id " + id + " Not Found!"));
+        }
 
+
+
+    // Admin
     @Transactional
     @Override
     public void delete(long id)
@@ -62,6 +83,7 @@ public class BookServiceImpl
         }
     }
 
+    // Admin
     @Transactional
     @Override
     public Book save(Book book)

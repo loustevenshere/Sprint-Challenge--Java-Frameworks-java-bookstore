@@ -1,6 +1,11 @@
 package com.lambdaschool.bookstore.services;
 
+import com.lambdaschool.bookstore.exceptions.ResourceFoundException;
+import com.lambdaschool.bookstore.exceptions.ResourceNotFoundException;
 import com.lambdaschool.bookstore.models.ValidationError;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
@@ -39,5 +44,20 @@ public class HelperFunctionsImpl
             }
         }
         return listVE;
+    }
+
+    @Override
+    public boolean isAuthorizedToMakeChange(String username) {
+
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
+        if (username.equalsIgnoreCase(authentication.getName().toLowerCase()) || authentication.getAuthorities()
+        .contains(new SimpleGrantedAuthority("ROLE ADMIN")))
+        {
+            return true;
+        } else {
+            throw new ResourceFoundException(authentication.getName() + " not authorized to make change");
+        }
+
     }
 }
